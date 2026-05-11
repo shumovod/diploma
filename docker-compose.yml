@@ -1,0 +1,28 @@
+# Интерфейс: http://localhost:8080  |  API: http://localhost:8000  |  Проверка API: http://localhost:8000/api/health
+# Если 8080 занят, замените строку портов frontend на например "3000:80".
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      CHROMA_PERSIST_DIRECTORY: /data/chroma
+    volumes:
+      - chroma_data:/data/chroma
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  chroma_data:
